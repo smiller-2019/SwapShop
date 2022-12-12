@@ -1,8 +1,7 @@
 import React from "react";
 import "./instantMessenger.css";
 import Auth from "../../utils/auth";
-import IMessageUsers from "../../component/IMessageUsers";
-import { QUERY_IMESSAGES, QUERY_ME } from "../../utils/queries";
+import { QUERY_IMESSAGES, QUERY_ME, QUERY_USER } from "../../utils/queries";
 import { useQuery, useMutation } from "@apollo/client";
 import { Container, Button, Form } from "semantic-ui-react";
 import { POST_IMESSAGE } from "../../utils/mutations";
@@ -12,6 +11,11 @@ export default function InstantMessenger() {
   let iEmail = "";
 
   const { loading: loading1, error: error1, data: data1 } = useQuery(QUERY_ME);
+  const {
+    loading: loading2,
+    error: error2,
+    data: data2,
+  } = useQuery(QUERY_USER);
 
   const {
     loading: loading,
@@ -19,31 +23,18 @@ export default function InstantMessenger() {
     data: data,
   } = useQuery(QUERY_IMESSAGES);
 
-  const me = data1?.me || [];
+  const [postIMessage] = useMutation(POST_IMESSAGE);
 
+  if (data2) {
+    for (let i = 0; i < 3; i++) {
+      console.log("data2.user.name[0] " + data2[i]);
+    }
+  }
   if (data1) {
+    console.log("AFTER data1.me.name " + data1.me.name);
     iName = data1.me.name;
     iEmail = data1.me.email;
   }
-
-  // const {
-  //   loading: loading2,
-  //   error: error2,
-  //   data: data2,
-  // } = useQuery(QUERY_USER);
-
-  const [postIMessage] = useMutation(POST_IMESSAGE);
-
-  // if (data2) {
-  //   for (let i = 0; i < 3; i++) {
-  //     console.log("data2.user.name[0] " + data2[i]);
-  //   }
-  // }
-  // if (data1) {
-  //   console.log("AFTER data1.me.name " + data1.me.name);
-  //   iName = data1.me.name;
-  //   iEmail = data1.me.email;
-  // }
   console.log("The current user is" + iName + " " + iEmail);
 
   const [state, stateSet] = React.useState({
@@ -59,8 +50,9 @@ export default function InstantMessenger() {
     if (Auth.loggedIn()) {
       console.log("In render, The current iName is" + iName);
       console.log("In render, The current iEmail is" + iEmail);
+
       //Display if messages exist
-      if (data) {
+      if (data && data2) {
         console.log("AFTER data.iMessages.iName " + data.iMessages.iName);
         console.log("after if data check in render");
         return (
@@ -95,18 +87,18 @@ export default function InstantMessenger() {
                 </Container>
               )
             )}
-            {iChat(iName, iEmail)}
+            {iChat(iName, iEmail, data2)}
           </>
         );
       } else {
-        // iChat(iName, iEmail);
+        if (data2) iChat(iName, iEmail);
       }
     } else {
       return <h2>You need to be logged in to view this page</h2>;
     }
   }
 
-  const iChat = (iName, iEmail) => {
+  const iChat = (iName, iEmail, data2) => {
     // console.log("State name is " + state.iName);
     console.log("in iChat");
 
@@ -175,14 +167,18 @@ export default function InstantMessenger() {
               <Form.Select
                 fluid
                 label="Receiver Name"
-                //options={() => IMessageUsers()}
                 options={options}
+                // options={data2.map((name, email) => {
+                //   return {
+                //     value: name,
+                //     label: email,
+                //   };
+                // })}
                 placeholder="Receiver Name"
                 onChange={(evt) =>
                   stateSet({
                     ...state,
                     iReceiverName: evt.target.value,
-                    //iReceiverEmail: optionsEmail[0],
                     iReceiverEmail: optionsEmail[0],
                   })
                 }
