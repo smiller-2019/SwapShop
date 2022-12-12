@@ -1,0 +1,28 @@
+const mongoose = require("mongoose");
+const dateFormat = require("../utils/dateFormat");
+
+const { Schema } = mongoose;
+
+const iMessageSchema = new Schema({
+  iEmail: {
+    type: String,
+    required: true,
+  },
+  iName: String,
+  iReceiverName: String,
+  iReceiverEmail: {
+    type: String,
+  },
+  iDateCreated: {
+    type: Date,
+    default: Date.now,
+    get: (timestamp) => dateFormat(timestamp),
+  },
+  iContent: {
+    type: String,
+  },
+});
+
+const IMessage = mongoose.model("IMessage", iMessageSchema);
+
+module.exports = IMessage;
