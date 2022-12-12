@@ -18,10 +18,12 @@ export default function ProductCategory(props) {
     });
   }
 
+
   return (
     <div>
-      <p>{category.name}</p>
+      <h2>{category.name}</h2>
       <Card.Group>{cards}</Card.Group>
     </div>
   );
 }
+

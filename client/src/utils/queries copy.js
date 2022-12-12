@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_USER = gql`
-  query Query {
-    users {
+  {
+    user {
       email
       name
     }
@@ -68,6 +68,42 @@ export const QUERY_ME = gql`
   }
 `;
 
+export const QUERY_MESSAGES = gql`
+  {
+    messages {
+      _id
+      sender {
+        name
+        _id
+      }
+      receiver {
+        name
+        _id
+      }
+      itemRequest {
+        _id
+        name
+        image
+        description
+        category {
+          name
+        }
+      }
+      itemOffer {
+        _id
+        name
+        image
+        description
+        category {
+          name
+        }
+      }
+      isClosed
+      isAgree
+    }
+  }
+`;
+
 export const QUERY_SENDER_MESSAGE = gql`
   query getSenders($sender: ID) {
     messageSender(sender: $sender) {
@@ -101,37 +137,34 @@ export const QUERY_SENDER_MESSAGE = gql`
 `;
 
 export const QUERY_RECEIVER_MESSAGE = gql`
-  query getReceivers($receiver: ID) {
+  query MessageReceiver($receiver: ID) {
     messageReceiver(receiver: $receiver) {
       _id
+      sender {
+        _id
+        name
+      }
+      receiver {
+        _id
+        name
+      }
       itemRequest {
         _id
         name
-        description
         image
       }
       itemOffer {
         _id
         name
-        description
         image
+        description
       }
-      sender {
-        _id
-        name
-        email
-      }
-      receiver {
-        _id
-        name
-        email
-      }
-      isAgree
       isClosed
-      replyMessage
+      isAgree
     }
   }
 `;
+
 export const QUERY_IMESSAGES = gql`
   {
     iMessages {
