@@ -8,8 +8,7 @@ export default class Nav extends Component {
 
   handleItemClick = (e, { name }) => {
     console.log("Clicked menu item:" + name);
-    window.location.assign("/" + name);
-    //this.setState({ activeItem: name });
+    this.setState({ activeItem: name });
   };
 
   render() {
@@ -18,6 +17,8 @@ export default class Nav extends Component {
     return (
       <Menu>
         <Menu.Item
+          as={NavLink}
+          to="/"
           name="Home"
           active={activeItem === "Home"}
           onClick={this.handleItemClick}
@@ -26,14 +27,18 @@ export default class Nav extends Component {
         </Menu.Item>
 
         <Menu.Item
+          as={NavLink}
+          to="/Dashboard"
           name="Dashboard"
           active={activeItem === "Dashboard"}
           onClick={this.handleItemClick}
         >
-          Dashboard
+          DashBoard
         </Menu.Item>
 
         <Menu.Item
+          as={NavLink}
+          to="/SignUp"
           name="SignUp"
           active={activeItem === "SignUp"}
           onClick={this.handleItemClick}
@@ -42,6 +47,8 @@ export default class Nav extends Component {
         </Menu.Item>
 
         <Menu.Item
+          as={NavLink}
+          to="/Login"
           name="Login"
           active={activeItem === "Login"}
           onClick={this.handleItemClick}
@@ -52,7 +59,7 @@ export default class Nav extends Component {
         <Menu.Item
           as={NavLink}
           to="/InstantMessenger"
-          name="InstantMessenger"
+          name="Login"
           active={activeItem === "InstantMessenger"}
           onClick={this.handleItemClick}
         >
