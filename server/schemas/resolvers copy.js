@@ -5,6 +5,10 @@ const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
+    user: async () => {
+      return await User.find().populate("name").populate("email");
+    },
+
     categories: async () => {
       return await Category.find();
     },
@@ -65,15 +69,10 @@ const resolvers = {
     me: async (parent, args, context) => {
       if (context.user) {
         const user = await User.findById(context.user._id);
-
         return user;
       }
 
       throw new AuthenticationError("Not logged in");
-    },
-
-    users: async () => {
-      return await User.find();
     },
   },
 
@@ -174,20 +173,6 @@ const resolvers = {
       console.log("imessage is " + imessage);
       return imessage;
     },
-
-    // addOrder: async (parent, { products }, context) => {
-    //   console.log(context);
-    //   if (context.user) {
-    //     // create new Order obj contains an arry of products
-    //     const order = new Order({ products });
-
-    //     await User.findByIdAndUpdate(context.user._id, { $push: { orders: order } });
-
-    //     return order;
-    //   }
-
-    //   throw new AuthenticationError('Not logged in');
-    // },
   },
 };
 
